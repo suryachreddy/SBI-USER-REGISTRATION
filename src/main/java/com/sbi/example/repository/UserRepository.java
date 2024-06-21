@@ -7,5 +7,7 @@ import com.sbi.example.model.UserEnitity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEnitity, Integer>{
+	
+	UserEnitity findByEmail(String email);
 
 }
