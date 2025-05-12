@@ -3,11 +3,11 @@ package com.sbi.example.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.sbi.example.model.UserEnitity;
+import com.sbi.example.model.UserEntity;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEnitity, Integer>{
+public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 	
-	UserEnitity findByEmail(String email);
+	UserEntity findByEmail(String email);
 
 }

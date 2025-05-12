@@ -1,15 +1,17 @@
 package com.sbi.example.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sbi.example.constants.ApiConstants;
-import com.sbi.example.model.UserEnitity;
+import com.sbi.example.model.UserEntity;
 import com.sbi.example.model.UserRequest;
 import com.sbi.example.repository.UserRepository;
 
 @Service
+@Slf4j
 public class UserService {
 	
 	@Autowired
@@ -18,28 +20,19 @@ public class UserService {
 	ModelMapper mapper = new ModelMapper();
  
 	public String saveUser(UserRequest userRequest) {
-		
-		/*
-		 * UserEnitity userEnitity = new UserEnitity();
-		 * 
-		 * userEnitity.setFirstName(userRequest.getFirstName());
-		 * userEnitity.setLastName(userRequest.getLastName());
-		 * userEnitity.setEmail(userRequest.getEmail());
-		 * userEnitity.setPhoneNumber(userRequest.getPhoneNumber());
-		 * userEnitity.setPassword(userRequest.getPassword());
-		 * userEnitity.setConfirmPassword(userRequest.getConfirmPassword());
-		 */		 
-		
-		UserEnitity savedEnitity = userRepository.findByEmail(userRequest.getEmail());
-		if(null != savedEnitity) {
+		UserEntity savedEntity = userRepository.findByEmail(userRequest.getEmail());
+		if(null != savedEntity) {
 			return ApiConstants.REGISTER_FAILED;
 		}
-		
-		UserEnitity userEnitity = mapper.map(userRequest, UserEnitity.class);		
-		
-		userRepository.save(userEnitity);
-		
+		UserEntity userEntity = mapper.map(userRequest, UserEntity.class);
+		userRepository.save(userEntity);
 		return ApiConstants.SUCCESSFULLY_REGISTER;
-		
+	}
+
+	public UserRequest getUserByMailId(String emailId) {
+		UserEntity userEntity = userRepository.findByEmail(emailId);
+		UserRequest user = mapper.map(userEntity, UserRequest.class);
+		log.info("user details based on emailId: {}", user);
+		return user;
 	}
 }
