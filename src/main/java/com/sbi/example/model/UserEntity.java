@@ -21,4 +21,5 @@ public class UserEntity {
 	private String phoneNumber;
 	private String password;
 	private String confirmPassword;
+	private long accountNumber;
 }

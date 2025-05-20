@@ -1,5 +1,8 @@
 package com.sbi.example.service;
 
+import com.sbi.example.model.BalanceEnquiryEntity;
+import com.sbi.example.repository.BalanceEnquiryRepository;
+import com.sbi.example.util.RandomNumberGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class UserService {
 	
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	BalanceEnquiryRepository balanceEnquiryRepository;
 	
 	ModelMapper mapper = new ModelMapper();
  
@@ -31,8 +37,15 @@ public class UserService {
 			return ApiConstants.REGISTER_FAILED;
 		}
 		UserEntity userEntity = mapper.map(userRequest, UserEntity.class);
+		long accountNumber = RandomNumberGenerator.generate12DigitNumber();
+		log.info("Generated account number for user: {}, accountNumber: {}", userEntity.getEmail(), accountNumber);
+		userEntity.setAccountNumber(accountNumber);
 		userRepository.save(userEntity);
-		return ApiConstants.SUCCESSFULLY_REGISTER;
+		// saving bank account info into the BalanceEnquiry table
+		BalanceEnquiryEntity balanceEnquiry = new BalanceEnquiryEntity();
+		balanceEnquiry.setAccountNumber(accountNumber);
+		balanceEnquiryRepository.save(balanceEnquiry);
+		return ApiConstants.SUCCESSFULLY_REGISTER + accountNumber;
 	}
 
 	public UserRequest getUserByMailId(String emailId) {
@@ -51,7 +64,7 @@ public class UserService {
 			isUserDeleted = true;
 			log.info("user deleted successfully");
 		}
-		log.info("user not found by the given email-id: {}", emailId);
+		log.info("user not found for the given email-id: {}", emailId);
 		return isUserDeleted;
 	}
 
