@@ -10,8 +10,8 @@ import com.sbi.example.model.UserEntity;
 import com.sbi.example.model.UserRequest;
 import com.sbi.example.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -23,6 +23,9 @@ public class UserService {
 	ModelMapper mapper = new ModelMapper();
  
 	public String saveUser(UserRequest userRequest) {
+		if (!(userRequest.getPassword().equals(userRequest.getConfirmPassword()))) {
+			return ApiConstants.PASSWORD_VALIDATION;
+		}
 		UserEntity savedEntity = userRepository.findByEmail(userRequest.getEmail());
 		if(null != savedEntity) {
 			return ApiConstants.REGISTER_FAILED;
@@ -50,5 +53,27 @@ public class UserService {
 		}
 		log.info("user not found by the given email-id: {}", emailId);
 		return isUserDeleted;
+	}
+
+	public String updateUser(int id, UserRequest userRequest) {
+		String userUpdated;
+		if (!(userRequest.getPassword().equals(userRequest.getConfirmPassword()))) {
+			return ApiConstants.PASSWORD_VALIDATION;
+		}
+		Optional<UserEntity> userEntity = userRepository.findById(id);
+		if (userEntity.isPresent()) {
+			UserEntity userPresent = userEntity.get();
+			userPresent.setFirstName(userRequest.getFirstName());
+			userPresent.setLastName(userRequest.getLastName());
+			userPresent.setPassword(userRequest.getPassword());
+			userPresent.setConfirmPassword(userRequest.getConfirmPassword());
+			userRepository.save(userPresent);
+			log.info("user update successfully for id : {}", id);
+			userUpdated = ApiConstants.USER_UPDATED_SUCCESSFULLY;
+		} else {
+			userUpdated = ApiConstants.USER_NOT_FOUND_BY_ID;
+			log.info("user not found by id : {}", id);
+		}
+		return userUpdated;
 	}
 }

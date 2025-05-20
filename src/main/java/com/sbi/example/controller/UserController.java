@@ -24,6 +24,9 @@ public class UserController {
 	public ResponseEntity<Object> register(@Valid @RequestBody UserRequest userRequest) {
         log.info("user register input payload: {}", userRequest);
 		String response = userService.saveUser(userRequest);
+		if (response.equals(ApiConstants.PASSWORD_VALIDATION) || response.equals(ApiConstants.REGISTER_FAILED)) {
+			return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
@@ -47,4 +50,16 @@ public class UserController {
 		return new ResponseEntity<>(ApiConstants.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
 	}
 
+	@PatchMapping("/user/{id}")
+	public ResponseEntity<Object> updateUser(@PathVariable int id, @RequestBody UserRequest userRequest) {
+		log.info("input - userId: {}, userRequest: {}", id, userRequest);
+		String response = userService.updateUser(id, userRequest);
+		if (response.equals(ApiConstants.USER_UPDATED_SUCCESSFULLY)) {
+			return new ResponseEntity<>(ApiConstants.USER_UPDATED_SUCCESSFULLY, HttpStatus.OK);
+		} else if(response.equals(ApiConstants.PASSWORD_VALIDATION)) {
+			return new ResponseEntity<>(ApiConstants.PASSWORD_VALIDATION, HttpStatus.BAD_REQUEST);
+		} else {
+			return new ResponseEntity<>(ApiConstants.USER_NOT_FOUND_BY_ID, HttpStatus.NOT_FOUND);
+		}
+	}
 }
