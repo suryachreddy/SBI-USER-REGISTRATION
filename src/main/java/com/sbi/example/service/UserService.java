@@ -68,7 +68,7 @@ public class UserService {
 		return isUserDeleted;
 	}
 
-	public String updateUser(int id, UserRequest userRequest) {
+	public String updateUser(Long id, UserRequest userRequest) {
 		String userUpdated;
 		if (!(userRequest.getPassword().equals(userRequest.getConfirmPassword()))) {
 			return ApiConstants.PASSWORD_VALIDATION;

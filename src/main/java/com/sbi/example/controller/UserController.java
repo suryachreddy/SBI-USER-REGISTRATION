@@ -51,7 +51,7 @@ public class UserController {
 	}
 
 	@PatchMapping("/user/{id}")
-	public ResponseEntity<Object> updateUser(@PathVariable int id, @RequestBody UserRequest userRequest) {
+	public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
 		log.info("input - userId: {}, userRequest: {}", id, userRequest);
 		String response = userService.updateUser(id, userRequest);
 		if (response.equals(ApiConstants.USER_UPDATED_SUCCESSFULLY)) {

@@ -10,8 +10,8 @@ import javax.persistence.*;
 public class BalanceEnquiryEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private long accountNumber;
     private Double lastCreditedAmount;
     private Double availableBalance;
