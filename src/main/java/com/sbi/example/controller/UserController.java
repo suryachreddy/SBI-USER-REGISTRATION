@@ -1,6 +1,7 @@
 package com.sbi.example.controller;
 
 import com.sbi.example.constants.ApiConstants;
+import com.sbi.example.model.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class UserController {
 	@GetMapping("/user/{emailId}")
 	public ResponseEntity<Object> userDetails(@PathVariable String emailId) {
 		log.info("input emailId for user details: {}", emailId);
-		UserRequest user = userService.getUserByMailId(emailId);
+		UserResponse user = userService.getUserByMailId(emailId);
 		if (Objects.nonNull(user)) {
 			return new ResponseEntity<>(userService.getUserByMailId(emailId), HttpStatus.OK);
 		}

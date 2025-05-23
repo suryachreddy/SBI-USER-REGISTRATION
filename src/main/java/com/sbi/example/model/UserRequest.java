@@ -20,5 +20,5 @@ public class UserRequest {
 	private String password;
 	@NotBlank(message = "Confirm Password must not be empty")
 	private String confirmPassword;
-	private long accountNumber;
+	//private long accountNumber;
 }
